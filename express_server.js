@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const port = 8080;
+// const cookieSession = require('cookie-session')
 
 app.set('view engine', 'ejs');
 
@@ -70,6 +71,12 @@ app.post("/urls/:id", (req, res) =>{
   const longURL = req.body.longURL;
   urlDatabase[id] = longURL;
   res.redirect(`/urls/${id}`);
+});
+
+app.post("/login", (req, res) =>{
+    res.cookie('Username', 'Username');
+    res.send('Welcome Your logged In !!')
+    
 });
 
 app.listen(port,()=>{
