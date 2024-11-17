@@ -17,12 +17,11 @@
           <a class="nav-item nav-link" href="/urls">My URLs</a>
           <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
         </div> 
-      </div>
-
+        </div>
        <% if (username) { %>
-        <div class="margin-right"> Welcome, <%= username %></div>
-        <form action="/logout" method='POST' class='nav-item navbar-right>
-            <button type='submit' class='btn btn-danger'>Logout</button>
+        <div> Welcome, <%= username %></div>
+        <form action="/logout" method='POST' class='nav-item navbar-right'>
+            <button type='submit' style="margin-left:10px;">Logout</button>
         </form>
       <%  } else { %>
          <form action="/login" method="POST" class="nav-item navbar-right">
@@ -30,5 +29,6 @@
           <button type="login">Login</button>
         </form>
       <% } %>
+
     </nav>
   </header>            

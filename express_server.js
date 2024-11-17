@@ -93,14 +93,14 @@ app.post("/urls/:id", (req, res) => {
 
 app.post("/login", (req, res) => {
   const username = req.body.username;
-  // res.cookie('username', username);
+  res.cookie('username', username);
   res.redirect('/urls');
     
 });
 
-app.post("/logout", (req,res) => {
+app.post("/logout", (req, res) => {
   res.clearCookie('username');
-  res.redirect("/login")
+  res.redirect('/urls');
 });
 
 
