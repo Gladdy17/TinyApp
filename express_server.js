@@ -12,7 +12,7 @@ app.use(express.urlencoded({ extended: true }));
 
 function generateRandomString() {
   let result = '';
-  const characters = 'ABCDEFGHIJKLMONPQRSTVWXYZ';
+  const characters = 'ABCDEFGHIJKLMONPQRSTVWXYZabcdefghifklmnopqrst';
   for (let i = 0; i < characters.length; i++) {
     result += characters[i];
   }
@@ -56,10 +56,6 @@ app.get("/urls/new", (req, res) => {
   res.render("urls_new", templateVars); // render the urls_new template with the username
 });
 
-// app.get("/urls/new", (req, res) => {
-//   res.render("urls_new");
-// });
-
 app.get('/urls/:id', (req, res) => {
   const templateVars = { id: req.params.id, longURL: urlDatabase[req.params.id]};
   res.render("urls_show", templateVars);
@@ -90,7 +86,6 @@ app.post("/urls/:id", (req, res) => {
   res.redirect(`/urls/${id}`);
 });
 
-
 app.post("/login", (req, res) => {
   const username = req.body.username;
   res.cookie('username', username);
@@ -102,9 +97,6 @@ app.post("/logout", (req, res) => {
   res.clearCookie('username');
   res.redirect('/urls');
 });
-
-
-
 
 app.listen(port,()=>{
   console.log(`Examples app listening on port ${port}`);
