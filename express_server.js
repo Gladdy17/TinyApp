@@ -57,23 +57,18 @@ app.get('/urls.json', (req, res) => {
   res.json(urlDatabase);
 });
 
-
-app.get('/urls', (req, res) =>{
-  const templateVars = {
-    urls: urlDatabase,
-    username: req.cookies['username'],
-  };
-  res.render('urls_index', templateVars);
+app.get("/urls", (req, res) => {
+  const userId = req.cookies["user_id"];
+  const user = users[userId] || null; // Retrieve the user or set to null if not found
+  const templateVars = { user, urls: urlDatabase }; // Pass the user object to the template
+  res.render("urls_index", templateVars);
 });
 
-
 app.get("/urls/new", (req, res) => {
-  const username = req.cookies["username"]; // Get the username from cookies
-  const templateVars = {
-    username: username, // pass the username to the template
-    // other variables can be added here
-  };
-  res.render("urls_new", templateVars); // render the urls_new template with the username
+  const userId = req.cookies["user_id"]; // Retrieve the user_id from the cookies
+  const user = users[userId] || null;   // Retrieve the user object from the users database
+  const templateVars = { user };        // Pass the user object to the template
+  res.render("urls_new", templateVars); // Render the urls_new template
 });
 
 app.get('/urls/:id', (req, res) => {
