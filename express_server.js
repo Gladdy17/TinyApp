@@ -10,6 +10,11 @@ app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 
 
+const generateRandomId = () => `user${Math.random().toString(24).substring(3,7)}`;
+
+
+
+
 function generateRandomString() {
   let result = '';
   const characters = 'ABCDEFGHIJKLMONPQRSTVWXYZabcdefghifklmnopqrst';
@@ -18,6 +23,21 @@ function generateRandomString() {
   }
   return result;
 }
+
+const users = {
+  userRandomID: {
+    id: "userRandomID",
+    email: "user@example.com",
+    password: "purple-monkey-dinosaur",
+  },
+  user2RandomID: {
+    id: "user2RandomID",
+    email: "user2@example.com",
+    password: "dishwasher-funk",
+  },
+};
+
+
 
 
 const urlDatabase = {
@@ -88,7 +108,7 @@ app.post("/urls/:id", (req, res) => {
 
 app.post("/login", (req, res) => {
   const username = req.body.username;
-  res.cookie('username', username);
+  // res.cookie('username', username);
   res.redirect('/urls');
     
 });
@@ -104,6 +124,27 @@ app.get("/register", (req, res) => {
 
 
 });
+
+app.post("/register", (req, res) => {
+  const {email, password } = req.body;
+
+  if(!email || !password){
+    return res.status(400).send("Email and password cannot be empty");
+  }
+
+const userID = generateRandomId();
+
+  users[userID] = {
+    id: userID,
+    email,
+    password,
+  };
+  res.cookie("user_id", userID);
+  
+  res.redirect('/urls')
+
+})
+
 
 app.listen(port,()=>{
   console.log(`Examples app listening on port ${port}`);
