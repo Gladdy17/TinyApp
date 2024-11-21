@@ -109,7 +109,7 @@ app.post("/login", (req, res) => {
 });
 
 app.post("/logout", (req, res) => {
-  res.clearCookie('username');
+  res.clearCookie('user_id');
   res.redirect('/urls');
 });
 
@@ -120,12 +120,27 @@ app.get("/register", (req, res) => {
 
 });
 
-app.post("/register", (req, res) => {
-  const {email, password } = req.body;
 
-  if(!email || !password){
-    return res.status(400).send("Email and password cannot be empty");
+app.post("/register", (req, res) => {
+  const { email, password } = req.body;
+
+  // Check if email or password is empty
+  if (!email || !password) {
+    return res.status(400).send("Email and password cannot be empty.");
   }
+
+  // Check if the email is already registered
+  for (let user_id in users) {
+    if (users[user_id].email === email) {
+      return res.status(400).send("Email is already registered.");
+    }
+  }
+
+
+
+
+
+
 
 const userID = generateRandomId();
 
