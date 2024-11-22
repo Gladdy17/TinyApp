@@ -102,11 +102,32 @@ app.post("/urls/:id", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
-  const username = req.body.username;
-  // res.cookie('username', username);
-  res.redirect('/urls');
-    
+  const { email, password } = req.body;
+
+  // Find the user by email
+  let foundUser = null;
+  for (const userId in users) {
+    if (users[userId].email === email) {
+      foundUser = users[userId];
+      break;
+    }
+  }
+
+  // If user not found or password is incorrect, send error
+  if (!foundUser || foundUser.password !== password) {
+    return res.status(403).send("Invalid email or password.");
+  }
+
+  // Set the user_id cookie and redirect
+  res.cookie("user_id", foundUser.id);
+  res.redirect("/urls");
 });
+
+
+app.get("/login", (req, res) =>{
+  res.render("login")
+})
+
 
 app.post("/logout", (req, res) => {
   res.clearCookie('user_id');
