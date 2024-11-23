@@ -79,16 +79,23 @@ app.get("/urls", (req, res) => {
 
 app.get("/urls/new", (req, res) => {
   const userId = req.cookies["user_id"]; // Retrieve the user_id from the cookies
-  const user = users[userId] || null;   // Retrieve the user object from the users database
+  if(!userId || !users[userId]){   // added if statement for redirect logic
+    return res.redirect("/login");
+  }
+  const user = users[userId] 
   const templateVars = { user };        // Pass the user object to the template
   res.render("urls_new", templateVars); // Render the urls_new template
 });
 
 app.get('/urls/:id', (req, res) => {
-  const templateVars = { id: req.params.id, longURL: urlDatabase[req.params.id]};
+  const id = req.params.id;
+  const longURL = urlDatabase[id];
+  if(!longURL){
+    return res.status(404).send("<h2>Sorry, the Url does not exist.</h2>")
+  }
+  const templateVars = { id, longURL};
   res.render("urls_show", templateVars);
 });
-
 
 app.post("/urls", (req, res) => {
   const id = generateRandomString();
