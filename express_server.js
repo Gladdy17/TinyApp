@@ -8,6 +8,19 @@ app.set('view engine', 'ejs');
 
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
+app.use((req, res, next) => {
+  console.log("Cookies:", req.cookies); // Check the cookies object
+  console.log("Users object:", users); // Check the users object
+  
+  const userId = req.cookies["user_id"]; // This might be undefined
+  const user = users[userId] || null;   // This line is likely causing the issue
+  
+  console.log("User ID:", userId);
+  console.log("User:", user);
+
+  res.locals.user = user; // If undefined, it will still log as null
+  next();
+});
 
 
 const generateRandomId = () => `user${Math.random().toString(24).substring(3,7)}`;
@@ -104,6 +117,8 @@ app.post("/urls/:id", (req, res) => {
 app.post("/login", (req, res) => {
   const { email, password } = req.body;
 
+  console.log("Login attempt:", { email, password }); // Debugging input
+
   // Find the user by email
   let foundUser = null;
   for (const userId in users) {
@@ -113,15 +128,21 @@ app.post("/login", (req, res) => {
     }
   }
 
+  console.log("Found user:", foundUser); // Debugging user lookup
+
   // If user not found or password is incorrect, send error
   if (!foundUser || foundUser.password !== password) {
+    console.log("Invalid email or password.");
     return res.status(403).send("Invalid email or password.");
   }
 
   // Set the user_id cookie and redirect
   res.cookie("user_id", foundUser.id);
+  console.log("User logged in successfully:", foundUser.id); // Debugging successful login
   res.redirect("/urls");
 });
+
+
 
 
 app.get("/login", (req, res) =>{
@@ -131,7 +152,7 @@ app.get("/login", (req, res) =>{
 
 app.post("/logout", (req, res) => {
   res.clearCookie('user_id');
-  res.redirect('/urls');
+  res.redirect('/login');
 });
 
 
