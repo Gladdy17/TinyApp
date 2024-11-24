@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const cookieParser = require("cookie-parser");
 const port = 8080;
+const bcrypt = require("bcryptjs");
 // const cookieSession = require('cookie-session')
 
 app.set('view engine', 'ejs');
@@ -223,7 +224,13 @@ app.post("/login", (req, res) => {
   console.log("Found user:", foundUser); // Debugging user lookup
 
   // If user not found or password is incorrect, send error
-  if (!foundUser || foundUser.password !== password) {
+  if (!foundUser) {
+    console.log("Invalid email or password.");
+    return res.status(403).send("Invalid email or password.");
+  }
+
+  // Compare the hashed password with the entered password
+  if (!bcrypt.compareSync(password, foundUser.password)) {
     console.log("Invalid email or password.");
     return res.status(403).send("Invalid email or password.");
   }
@@ -270,18 +277,13 @@ app.post("/register", (req, res) => {
     }
   }
 
-
-
-
-
-
-
+const hashedPassword = bcrypt.hashSync(password, 10);  
 const userID = generateRandomId();
 
   users[userID] = {
     id: userID,
     email,
-    password,
+    password: hashedPassword,
   };
   res.cookie("user_id", userID);
   
