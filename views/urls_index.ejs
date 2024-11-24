@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -31,18 +32,21 @@
                 <%= id %>
               </td>
               <td>
-                <%= urls[id] %>
+                <!-- Display the long URL as a clickable link -->
+                <a href="<%= urls[id].longURL %>" target="_blank"><%= urls[id].longURL %></a>
               </td>
               <td>
+                <!-- Delete button for the URL -->
                 <form action="/urls/<%= id %>/delete" method="POST">
-                  <button type="submit">Delete</button>
+                  <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                 </form>
               </td>
               <td>
-                <a href="/urls/<%= id %>">Edit</a>
+                <!-- Edit link for the URL -->
+                <a href="/urls/<%= id %>" class="btn btn-primary btn-sm">Edit</a>
               </td>
             </tr>
-            <% } %>
+          <% } %>
         </tbody>
       </table>
     </main>
