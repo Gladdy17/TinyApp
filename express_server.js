@@ -3,7 +3,8 @@ const app = express();
 // const cookieParser = require("cookie-parser");
 const port = 8080;
 const bcrypt = require("bcryptjs");
-const cookieSession = require('cookie-session')
+const cookieSession = require('cookie-session');
+const { getUserByEmail } = require('./helpers');
 
 app.set('view engine', 'ejs');
 
@@ -14,16 +15,8 @@ app.use(cookieSession({
 
 app.use(express.urlencoded({ extended: true }));
 app.use((req, res, next) => {
-  console.log("Cookies:", req.cookies); // Check the cookies object
-  console.log("Users object:", users); // Check the users object
-  
-  const userId = req.session.user_id; // This might be undefined
-  const user = users[userId] || null;   // This line is likely causing the issue
-  
-  console.log("User ID:", userId);
-  console.log("User:", user);
-
-  res.locals.user = user; // If undefined, it will still log as null
+  const userId = req.session.user_id;
+  res.locals.user = users[userId] || null;
   next();
 });
 
@@ -240,9 +233,9 @@ app.post('/login', (req, res) => {
 });
 
 
-app.get("/login", (req, res) =>{
-  res.render("login")
-})
+app.get("/login", (req, res) => {
+  res.render("login");
+});
 
 
 app.post("/logout", (req, res) => {
@@ -252,9 +245,7 @@ app.post("/logout", (req, res) => {
 
 
 app.get("/register", (req, res) => {
-  res.render("register")
-
-
+  res.render("register");
 });
 
 
